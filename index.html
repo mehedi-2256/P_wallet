@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payo</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-slate-800 min-h-screen">
+    <section class="min-h-screen max-w-md mx-auto bg-gray-200">
+      <nav class="flex relative justify-center items-center">
+        <div class="relative flex justify-center items-center mt-20 w-9/12">
+          <img class="w-50 absolute" src="/assets/bg.png" alt="" />
+          <img class="pb-10 pl-5" src="/assets/Group.png" alt="" />
+        </div>
+      </nav>
+      <section class="p-4">
+        <div class="hero">
+          <div class="card bg-base-100 w-full shrink-0 shadow-2xl">
+            <div class="card-body">
+              <fieldset class="fieldset">
+                <label class="label">Account Number</label>
+                <input
+                  id="accNum"
+                  type="number"
+                  class="input"
+                  placeholder="Account Number"
+                />
+                <label class="label">Pin</label>
+                <input
+                  id="pin"
+                  type="password"
+                  class="input"
+                  placeholder="Pin"
+                />
+                <div><a class="link link-hover">Forgot password?</a></div>
+                <button id="loginBtn" class="btn btn-neutral mt-4">
+                  Login
+                </button>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+    <script src="./login.js"></script>
+  </body>
+</html>
