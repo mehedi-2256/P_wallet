@@ -1,162 +1,1320 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payo</title>
-
+    <title>Payoo — Dashboard</title>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
       rel="stylesheet"
       type="text/css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "DM Sans", sans-serif;
+      }
+      .brand-font {
+        font-family: "Syne", sans-serif;
+      }
+
+      body {
+        background: #f1f5f9;
+      }
+
+      /* Header */
+      .header-bg {
+        background: linear-gradient(
+          135deg,
+          #064e3b 0%,
+          #065f46 40%,
+          #059669 100%
+        );
+        border-radius: 0 0 2rem 2rem;
+        padding: 1.5rem 1.25rem 3.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .header-bg::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+      }
+      .header-bg::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: -40px;
+        width: 160px;
+        height: 160px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+      }
+
+      /* Balance Card */
+      .balance-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1.25rem;
+        padding: 1.25rem;
+      }
+      .balance-amount {
+        font-family: "Syne", sans-serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: white;
+        line-height: 1;
+      }
+      .balance-label {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      /* Feature Grid */
+      .feature-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1rem 0.75rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1.5px solid transparent;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .feature-card:hover {
+        transform: translateY(-3px);
+        border-color: #10b981;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.18);
+      }
+      .feature-card.active {
+        border-color: #059669;
+        background: #f0fdf4;
+      }
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 8px;
+      }
+      .feature-label {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #334155;
+      }
+
+      /* Section Panel */
+      .section-panel {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+        margin-top: 1rem;
+        animation: slideUp 0.3s ease;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Form inputs */
+      .p-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #1e293b;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .p-input:focus {
+        border-color: #10b981;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+      .p-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 5px;
+        display: block;
+      }
+      .form-group {
+        margin-bottom: 14px;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #059669, #10b981);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 4px;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Toast */
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1e293b;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 9999;
+        transition: transform 0.3s ease;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      #toast.success {
+        background: #065f46;
+      }
+      #toast.error {
+        background: #991b1b;
+      }
+
+      /* Transaction list */
+      .txn-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .txn-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+      .txn-credit {
+        background: #f0fdf4;
+        color: #16a34a;
+      }
+      .txn-debit {
+        background: #fff7ed;
+        color: #ea580c;
+      }
+
+      /* Avatar */
+      .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .p-select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #1e293b;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .p-select:focus {
+        border-color: #10b981;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+
+      .section-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    </style>
   </head>
-
-  <body class="bg-slate-800 min-h-screen">
-    <section class="min-h-screen max-w-md mx-auto bg-gray-200">
-      <header>
-        <nav>
-          <section class="p-1 flex items-center justify-around mb-5">
-            <div class="flex items-center">
-              <div>
-                <img src="./assets/Group.png" alt="" />
-              </div>
-              <div>
-                <h2 class="text-3xl font-bold pb-1">
-                  $ <span id="default_amount">4500</span>
-                </h2>
-                <p class="border rounded-lg p-1 font-semibold">
-                  Available Balance
-                </p>
-              </div>
+  <body>
+    <div class="max-w-md mx-auto" style="min-height: 100vh">
+      <!-- Header -->
+      <div class="header-bg">
+        <div class="flex justify-between items-start mb-5 relative z-10">
+          <div>
+            <p
+              class="text-emerald-200 text-xs font-medium tracking-wider uppercase mb-0.5"
+            >
+              Welcome back 👋
+            </p>
+            <h1 id="userName" class="brand-font text-white text-xl font-bold">
+              Loading...
+            </h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="userAvatar" class="avatar-circle" onclick="toggleLogout()">
+              ??
             </div>
+          </div>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="balance-card relative z-10">
+          <div class="flex justify-between items-start">
             <div>
-              <button class="btn btn-soft border rounded-lg bg-slate-300">
-                Log Out
-              </button>
+              <p class="balance-label mb-1">Available Balance</p>
+              <div class="balance-amount">
+                ৳ <span id="balanceDisplay">0</span>
+              </div>
+              <p class="text-emerald-200 text-xs mt-1" id="accountDisplay">
+                Loading account...
+              </p>
             </div>
-          </section>
-        </nav>
-      </header>
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.15);
+                border-radius: 10px;
+                padding: 10px;
+              "
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="rgba(255,255,255,0.8)"
+                stroke-width="2"
+              >
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+            </div>
+          </div>
+        </div>
 
-      <main>
-        <section class="pl-5 mb-5">
-          <h2 class="text-2xl font-semibold">Welcome to Payooo!</h2>
-          <p>
-            Enjoy easy and convenient financial services with us. Cashout charge
-            is low and
-          </p>
-        </section>
-
-        <section class="p-3 grid grid-cols-3 gap-1">
-          <div
-            id="addmoney-section"
-            class="box border p-3 text-center rounded-lg w-35"
+        <!-- Logout dropdown (hidden) -->
+        <div
+          id="logoutMenu"
+          class="hidden absolute right-4 mt-2 bg-white rounded-xl shadow-xl overflow-hidden z-50"
+          style="top: 80px; width: 160px"
+        >
+          <div class="px-4 py-3 border-b border-slate-100">
+            <p class="text-xs text-slate-400">Signed in as</p>
+            <p
+              id="logoutName"
+              class="text-sm font-semibold text-slate-700 truncate"
+            ></p>
+          </div>
+          <button
+            onclick="logout()"
+            class="w-full px-4 py-3 text-left text-sm text-red-600 font-medium hover:bg-red-50 flex items-center gap-2"
           >
-            <img class="w-9 mx-auto" src="./assets/wallet1.png" alt="" />
-            <p>Add Money</p>
-          </div>
-          <div id="cashOut_section" class="box border p-3 text-center rounded-lg w-35">
-            <img class="w-9 mx-auto" src="./assets/wallet1.png" alt="" />
-            <p>Cash Out</p>
-          </div>
-          <div class="box border p-3 text-center rounded-lg w-35">
-            <img class="w-9 mx-auto" src="./assets/wallet1.png" alt="" />
-            <p>Transfer Money</p>
-          </div>
-          <div class="box border p-3 text-center rounded-lg w-35">
-            <img class="w-9 mx-auto" src="./assets/wallet1.png" alt="" />
-            <p>Get Bonus</p>
-          </div>
-          <div class="box border p-3 text-center rounded-lg w-35">
-            <img class="w-9 mx-auto" src="./assets/wallet1.png" alt="" />
-            <p>Pay Bill</p>
-          </div>
-          <div class="box border p-3 text-center rounded-lg w-35">
-            <img class="w-9 mx-auto" src="./assets/wallet1.png" alt="" />
-            <p>Trans History</p>
-          </div>
-        </section>
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Sign Out
+          </button>
+        </div>
+      </div>
 
-        <section id="addMoney" hidden class="p-5 bg-base-200">
-          <h2 class="text-2xl font-semibold">Add Money</h2>
-          <br />
-          <div class="hero bg-base-200">
-            <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-              <div class="card-body">
-                <label class="label">Select</label>
-                <select class="select">
-                  <option disabled selected>Select a method</option>
-                  <option>Bkash</option>
-                  <option>Nagad</option>
-                  <option>DBBL</option>
-                </select>
-                <fieldset class="fieldset">
-                  <label class="label">Account Number</label>
-                  <input type="email" class="input" placeholder="Enter acc" />
-                  <label class="label">Amount to add</label>
-                  <input
-                    id="addAmount"
-                    type="number"
-                    class="input"
-                    placeholder="amount"
-                  />
-                  <label class="label">Pin</label>
-                  <input
-                    id="pin"
-                    type="number"
-                    class="input"
-                    placeholder="Enter pin"
-                  />
-                  <button
-                    id="addMoney_btn"
-                    class="btn btn-neutral mt-4 bg-blue-500"
-                  >
-                    Add Money
-                  </button>
-                </fieldset>
-              </div>
+      <!-- Main Content -->
+      <div class="px-4 -mt-4 pb-8">
+        <!-- Feature Grid -->
+        <div class="grid grid-cols-3 gap-3 mb-1">
+          <div
+            class="feature-card"
+            id="btn-addmoney"
+            onclick="showSection('addmoney')"
+          >
+            <div class="feature-icon" style="background: #eff6ff">
+              <img
+                src="./assets/money1.png"
+                alt="Add Money"
+                style="width: 26px; height: 26px; object-fit: contain"
+              />
+            </div>
+            <div class="feature-label">Add Money</div>
+          </div>
+          <div
+            class="feature-card"
+            id="btn-cashout"
+            onclick="showSection('cashout')"
+          >
+            <div class="feature-icon" style="background: #fefce8">
+              <img
+                src="./assets/purse1.png"
+                alt="Cash Out"
+                style="width: 26px; height: 26px; object-fit: contain"
+              />
+            </div>
+            <div class="feature-label">Cash Out</div>
+          </div>
+          <div
+            class="feature-card"
+            id="btn-transfer"
+            onclick="showSection('transfer')"
+          >
+            <div class="feature-icon" style="background: #f0fdf4">
+              <img
+                src="./assets/send1.png"
+                alt="Transfer"
+                style="width: 26px; height: 26px; object-fit: contain"
+              />
+            </div>
+            <div class="feature-label">Send Money</div>
+          </div>
+          <div
+            class="feature-card"
+            id="btn-bonus"
+            onclick="showSection('bonus')"
+          >
+            <div class="feature-icon" style="background: #fdf4ff">
+              <img
+                src="./assets/bonus1.png"
+                alt="Bonus"
+                style="width: 26px; height: 26px; object-fit: contain"
+              />
+            </div>
+            <div class="feature-label">Get Bonus</div>
+          </div>
+          <div
+            class="feature-card"
+            id="btn-paybill"
+            onclick="showSection('paybill')"
+          >
+            <div class="feature-icon" style="background: #fff1f2">
+              <img
+                src="./assets/wallet1.png"
+                alt="Pay Bill"
+                style="width: 26px; height: 26px; object-fit: contain"
+              />
+            </div>
+            <div class="feature-label">Pay Bill</div>
+          </div>
+          <div
+            class="feature-card"
+            id="btn-history"
+            onclick="showSection('history')"
+          >
+            <div class="feature-icon" style="background: #f0f9ff">
+              <img
+                src="./assets/transaction1.png"
+                alt="History"
+                style="width: 26px; height: 26px; object-fit: contain"
+              />
+            </div>
+            <div class="feature-label">History</div>
+          </div>
+        </div>
+
+        <!-- ─── ADD MONEY ─── -->
+        <div id="section-addmoney" class="section-panel hidden">
+          <div class="section-title">
+            <span style="background: #eff6ff; padding: 6px; border-radius: 8px">
+              <img
+                src="./assets/money1.png"
+                style="width: 18px; height: 18px; object-fit: contain"
+              />
+            </span>
+            Add Money
+          </div>
+          <div class="form-group">
+            <label class="p-label">Payment Method</label>
+            <select id="am-method" class="p-select">
+              <option value="">— Select Method —</option>
+              <option value="bkash">bKash</option>
+              <option value="nagad">Nagad</option>
+              <option value="dbbl">Dutch Bangla (DBBL)</option>
+              <option value="rocket">Rocket</option>
+              <option value="bank">Bank Transfer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="p-label">Source Account Number</label>
+            <input
+              id="am-source"
+              type="tel"
+              class="p-input"
+              placeholder="Enter source account number"
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Amount (৳)</label>
+            <input
+              id="am-amount"
+              type="number"
+              class="p-input"
+              placeholder="Enter amount"
+              min="10"
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Your PIN</label>
+            <input
+              id="am-pin"
+              type="password"
+              class="p-input"
+              placeholder="Enter your PIN"
+              maxlength="6"
+            />
+          </div>
+          <button class="btn-primary" onclick="handleAddMoney()">
+            Add Money
+          </button>
+        </div>
+
+        <!-- ─── CASH OUT ─── -->
+        <div id="section-cashout" class="section-panel hidden">
+          <div class="section-title">
+            <span style="background: #fefce8; padding: 6px; border-radius: 8px">
+              <img
+                src="./assets/purse1.png"
+                style="width: 18px; height: 18px; object-fit: contain"
+              />
+            </span>
+            Cash Out
+          </div>
+          <div
+            class="p-3 rounded-xl mb-4"
+            style="background: #fefce8; border: 1px solid #fde68a"
+          >
+            <p class="text-xs text-yellow-700 font-medium">
+              ℹ️ Service charge: 1.85% of withdrawal amount
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="p-label">Agent Number</label>
+            <input
+              id="co-agent"
+              type="tel"
+              class="p-input"
+              placeholder="Enter 11-digit agent number"
+              maxlength="11"
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Amount (৳)</label>
+            <input
+              id="co-amount"
+              type="number"
+              class="p-input"
+              placeholder="Enter amount"
+              min="10"
+            />
+          </div>
+          <div
+            id="co-charge-preview"
+            class="hidden p-2 rounded-lg mb-1"
+            style="background: #f8fafc; border: 1px solid #e2e8f0"
+          >
+            <p class="text-xs text-slate-600">
+              Charge: ৳ <span id="co-charge">0</span> · You'll receive: ৳
+              <span id="co-receive">0</span>
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="p-label">Your PIN</label>
+            <input
+              id="co-pin"
+              type="password"
+              class="p-input"
+              placeholder="Enter your PIN"
+              maxlength="6"
+            />
+          </div>
+          <button class="btn-primary" onclick="handleCashOut()">
+            Cash Out
+          </button>
+        </div>
+
+        <!-- ─── SEND MONEY ─── -->
+        <div id="section-transfer" class="section-panel hidden">
+          <div class="section-title">
+            <span style="background: #f0fdf4; padding: 6px; border-radius: 8px">
+              <img
+                src="./assets/send1.png"
+                style="width: 18px; height: 18px; object-fit: contain"
+              />
+            </span>
+            Send Money
+          </div>
+          <div class="form-group">
+            <label class="p-label">Recipient Account Number</label>
+            <input
+              id="tf-recipient"
+              type="tel"
+              class="p-input"
+              placeholder="Enter recipient's account number"
+            />
+          </div>
+          <div
+            id="tf-recipient-name"
+            class="hidden p-2 rounded-lg mb-2"
+            style="background: #f0fdf4; border: 1px solid #bbf7d0"
+          >
+            <p class="text-xs text-green-700 font-medium">
+              ✓ <span id="tf-rname"></span>
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="p-label">Amount (৳)</label>
+            <input
+              id="tf-amount"
+              type="number"
+              class="p-input"
+              placeholder="Enter amount"
+              min="1"
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Reference (Optional)</label>
+            <input
+              id="tf-ref"
+              type="text"
+              class="p-input"
+              placeholder="e.g. Rent, Loan repayment..."
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Your PIN</label>
+            <input
+              id="tf-pin"
+              type="password"
+              class="p-input"
+              placeholder="Enter your PIN"
+              maxlength="6"
+            />
+          </div>
+          <button class="btn-primary" onclick="handleTransfer()">
+            Send Money
+          </button>
+        </div>
+
+        <!-- ─── BONUS ─── -->
+        <div id="section-bonus" class="section-panel hidden">
+          <div class="section-title">
+            <span style="background: #fdf4ff; padding: 6px; border-radius: 8px">
+              <img
+                src="./assets/bonus1.png"
+                style="width: 18px; height: 18px; object-fit: contain"
+              />
+            </span>
+            Daily Bonus
+          </div>
+          <div class="text-center py-6">
+            <div
+              style="
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #a855f7, #ec4899);
+                border-radius: 50%;
+                margin: 0 auto 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="brand-font text-xl font-bold text-slate-800 mb-1">
+              Claim Your Bonus!
+            </h3>
+            <p class="text-slate-500 text-sm mb-6">
+              Get a random bonus between ৳5 – ৳50 daily. Claim once per day!
+            </p>
+            <div
+              id="bonus-status"
+              class="hidden p-3 rounded-xl mb-4 text-sm font-medium"
+            ></div>
+            <button
+              id="claimBtn"
+              class="btn-primary"
+              style="max-width: 200px; margin: 0 auto"
+              onclick="handleClaimBonus()"
+            >
+              🎁 Claim Bonus
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── PAY BILL ─── -->
+        <div id="section-paybill" class="section-panel hidden">
+          <div class="section-title">
+            <span style="background: #fff1f2; padding: 6px; border-radius: 8px">
+              <img
+                src="./assets/wallet1.png"
+                style="width: 18px; height: 18px; object-fit: contain"
+              />
+            </span>
+            Pay Bill
+          </div>
+          <div class="form-group">
+            <label class="p-label">Bill Category</label>
+            <select
+              id="pb-category"
+              class="p-select"
+              onchange="updateBillTypes()"
+            >
+              <option value="">— Select Category —</option>
+              <option value="electricity">Electricity</option>
+              <option value="gas">Gas</option>
+              <option value="water">Water (WASA)</option>
+              <option value="internet">Internet / Broadband</option>
+              <option value="mobile">Mobile Recharge</option>
+              <option value="tv">Cable TV</option>
+            </select>
+          </div>
+          <div class="form-group" id="pb-provider-group" style="display: none">
+            <label class="p-label">Provider</label>
+            <select id="pb-provider" class="p-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="p-label" id="pb-bill-label"
+              >Bill / Account Number</label
+            >
+            <input
+              id="pb-billnum"
+              type="text"
+              class="p-input"
+              placeholder="Enter bill account number"
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Amount (৳)</label>
+            <input
+              id="pb-amount"
+              type="number"
+              class="p-input"
+              placeholder="Enter amount"
+              min="10"
+            />
+          </div>
+          <div class="form-group">
+            <label class="p-label">Your PIN</label>
+            <input
+              id="pb-pin"
+              type="password"
+              class="p-input"
+              placeholder="Enter your PIN"
+              maxlength="6"
+            />
+          </div>
+          <button class="btn-primary" onclick="handlePayBill()">
+            Pay Bill
+          </button>
+        </div>
+
+        <!-- ─── TRANSACTION HISTORY ─── -->
+        <div id="section-history" class="section-panel hidden">
+          <div class="section-title">
+            <span style="background: #f0f9ff; padding: 6px; border-radius: 8px">
+              <img
+                src="./assets/transaction1.png"
+                style="width: 18px; height: 18px; object-fit: contain"
+              />
+            </span>
+            Transaction History
+          </div>
+          <div id="txn-list">
+            <div class="text-center py-8 text-slate-400">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                style="margin: 0 auto 8px; opacity: 0.4"
+              >
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+              <p class="text-sm">No transactions yet</p>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </div>
 
-        <section id="cashOut" hidden class="p-5 bg-base-200">
-          <h2 class="text-2xl font-semibold">Cash Out</h2>
-          <br />
-          <div class="hero bg-base-200">
-            <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-              <div class="card-body">
-                <fieldset class="fieldset">
-                  <label class="label">Agent Number</label>
-                  <input type="email" class="input" placeholder="Enter 11 digit agent number" />
-                  <label class="label">Amount to cash out</label>
-                  <input
-                    id="cashoutAmount"
-                    type="number"
-                    class="input"
-                    placeholder="amount"
-                  />
-                  <label class="label">Pin</label>
-                  <input
-                    id="cashout_pin"
-                    type="number"
-                    class="input"
-                    placeholder="Enter pin"
-                  />
-                  <button
-                    id="cashout_btn"
-                    class="btn btn-neutral mt-4 bg-blue-500"
-                  >
-                    Cash Out
-                  </button>
-                </fieldset>
-              </div>
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <script>
+      // ─── DATA & CONSTANTS ─────────────────────────────
+      const USERS = {
+        "01711123456": { name: "Mehedi Hasan", avatar: "MH", pin: "1234" },
+        "01922987654": { name: "Raisa Akter", avatar: "RA", pin: "5678" },
+      };
+
+      const BILL_PROVIDERS = {
+        electricity: ["DESCO", "DPDC", "BPDB", "REB"],
+        gas: ["Titas Gas", "Bakhrabad Gas", "Jalalabad Gas"],
+        water: ["DWASA", "CWASA"],
+        internet: [
+          "Grameenphone",
+          "Robi",
+          "Banglalink",
+          "Airtel",
+          "Link3",
+          "BTTB",
+        ],
+        mobile: ["Grameenphone", "Robi", "Banglalink", "Teletalk", "Airtel"],
+        tv: ["T Sports Cable", "Digital Cable BD", "City Cable"],
+      };
+
+      let currentUser = null;
+      let activeSection = null;
+
+      // ─── INIT ─────────────────────────────────────────
+      function init() {
+        const acc = sessionStorage.getItem("payoo_user");
+        if (!acc || !USERS[acc]) {
+          window.location.href = "./index.html";
+          return;
+        }
+        currentUser = acc;
+        const user = USERS[acc];
+
+        document.getElementById("userName").textContent = user.name;
+        document.getElementById("userAvatar").textContent = user.avatar;
+        document.getElementById("logoutName").textContent = user.name;
+        document.getElementById("accountDisplay").textContent =
+          `Account: ${acc}`;
+        refreshBalance();
+        setupCashOutPreview();
+        setupTransferLookup();
+      }
+
+      function getBalance() {
+        return parseFloat(
+          localStorage.getItem(`payoo_balance_${currentUser}`) || 0,
+        );
+      }
+      function setBalance(val) {
+        localStorage.setItem(`payoo_balance_${currentUser}`, val.toFixed(2));
+        refreshBalance();
+      }
+      function refreshBalance() {
+        document.getElementById("balanceDisplay").textContent =
+          formatAmount(getBalance());
+      }
+      function formatAmount(n) {
+        return parseFloat(n).toLocaleString("en-BD", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      }
+
+      function getTransactions() {
+        return JSON.parse(
+          localStorage.getItem(`payoo_transactions_${currentUser}`) || "[]",
+        );
+      }
+      function addTransaction(type, label, amount, note = "") {
+        const txns = getTransactions();
+        txns.unshift({
+          id: Date.now(),
+          type, // 'credit' | 'debit'
+          label,
+          amount,
+          note,
+          time: new Date().toLocaleString("en-BD", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          balance: getBalance(),
+        });
+        localStorage.setItem(
+          `payoo_transactions_${currentUser}`,
+          JSON.stringify(txns.slice(0, 100)),
+        );
+      }
+
+      // ─── SECTION NAVIGATION ───────────────────────────
+      function showSection(name) {
+        // Close all
+        [
+          "addmoney",
+          "cashout",
+          "transfer",
+          "bonus",
+          "paybill",
+          "history",
+        ].forEach((s) => {
+          document.getElementById(`section-${s}`).classList.add("hidden");
+          document.getElementById(`btn-${s}`).classList.remove("active");
+        });
+        if (activeSection === name) {
+          activeSection = null;
+          return;
+        }
+        document.getElementById(`section-${name}`).classList.remove("hidden");
+        document.getElementById(`btn-${name}`).classList.add("active");
+        activeSection = name;
+        if (name === "history") renderHistory();
+        // Scroll to section
+        setTimeout(() => {
+          document
+            .getElementById(`section-${name}`)
+            .scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);
+      }
+
+      // ─── TOAST ────────────────────────────────────────
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        const icon = type === "success" ? "✓" : "✗";
+        t.innerHTML = `<span>${icon}</span> ${msg}`;
+        t.className = `show ${type}`;
+        setTimeout(() => {
+          t.className = "";
+        }, 3200);
+      }
+
+      // ─── VALIDATE PIN ─────────────────────────────────
+      function validatePin(inputPin) {
+        return USERS[currentUser].pin === inputPin;
+      }
+
+      // ─── ADD MONEY ────────────────────────────────────
+      function handleAddMoney() {
+        const method = document.getElementById("am-method").value;
+        const source = document.getElementById("am-source").value.trim();
+        const amount = parseFloat(document.getElementById("am-amount").value);
+        const pin = document.getElementById("am-pin").value;
+
+        if (!method) {
+          showToast("Please select a payment method.", "error");
+          return;
+        }
+        if (!source) {
+          showToast("Please enter source account number.", "error");
+          return;
+        }
+        if (!amount || amount < 10) {
+          showToast("Minimum add amount is ৳10.", "error");
+          return;
+        }
+        if (!validatePin(pin)) {
+          showToast("Incorrect PIN. Please try again.", "error");
+          return;
+        }
+
+        const newBalance = getBalance() + amount;
+        setBalance(newBalance);
+        addTransaction(
+          "credit",
+          `Add Money via ${method.toUpperCase()}`,
+          amount,
+          `From: ${source}`,
+        );
+        showToast(`৳${formatAmount(amount)} added successfully!`, "success");
+        clearForm(["am-method", "am-source", "am-amount", "am-pin"]);
+        refreshBalance();
+      }
+
+      // ─── CASH OUT ─────────────────────────────────────
+      function setupCashOutPreview() {
+        document
+          .getElementById("co-amount")
+          .addEventListener("input", function () {
+            const amt = parseFloat(this.value);
+            if (amt > 0) {
+              const charge = (amt * 0.0185).toFixed(2);
+              const receive = (amt - parseFloat(charge)).toFixed(2);
+              document.getElementById("co-charge").textContent = charge;
+              document.getElementById("co-receive").textContent = receive;
+              document
+                .getElementById("co-charge-preview")
+                .classList.remove("hidden");
+            } else {
+              document
+                .getElementById("co-charge-preview")
+                .classList.add("hidden");
+            }
+          });
+      }
+
+      function handleCashOut() {
+        const agent = document.getElementById("co-agent").value.trim();
+        const amount = parseFloat(document.getElementById("co-amount").value);
+        const pin = document.getElementById("co-pin").value;
+
+        if (!agent || agent.length < 11) {
+          showToast("Enter a valid 11-digit agent number.", "error");
+          return;
+        }
+        if (!amount || amount < 10) {
+          showToast("Minimum cash out amount is ৳10.", "error");
+          return;
+        }
+        if (amount > getBalance()) {
+          showToast("Insufficient balance.", "error");
+          return;
+        }
+        if (!validatePin(pin)) {
+          showToast("Incorrect PIN. Please try again.", "error");
+          return;
+        }
+
+        const charge = parseFloat((amount * 0.0185).toFixed(2));
+        const total = amount + charge;
+        if (total > getBalance()) {
+          showToast(
+            `Insufficient balance (including ৳${charge} charge).`,
+            "error",
+          );
+          return;
+        }
+
+        setBalance(getBalance() - total);
+        addTransaction(
+          "debit",
+          `Cash Out via Agent`,
+          amount,
+          `Agent: ${agent} · Charge: ৳${charge}`,
+        );
+        showToast(
+          `৳${formatAmount(amount)} cashed out! Charge: ৳${charge}`,
+          "success",
+        );
+        clearForm(["co-agent", "co-amount", "co-pin"]);
+        document.getElementById("co-charge-preview").classList.add("hidden");
+      }
+
+      // ─── TRANSFER ─────────────────────────────────────
+      function setupTransferLookup() {
+        document
+          .getElementById("tf-recipient")
+          .addEventListener("blur", function () {
+            const acc = this.value.trim();
+            if (USERS[acc] && acc !== currentUser) {
+              document.getElementById("tf-rname").textContent = USERS[acc].name;
+              document
+                .getElementById("tf-recipient-name")
+                .classList.remove("hidden");
+            } else {
+              document
+                .getElementById("tf-recipient-name")
+                .classList.add("hidden");
+            }
+          });
+      }
+
+      function handleTransfer() {
+        const recipient = document.getElementById("tf-recipient").value.trim();
+        const amount = parseFloat(document.getElementById("tf-amount").value);
+        const ref = document.getElementById("tf-ref").value.trim();
+        const pin = document.getElementById("tf-pin").value;
+
+        if (!recipient) {
+          showToast("Please enter recipient account number.", "error");
+          return;
+        }
+        if (recipient === currentUser) {
+          showToast("You cannot send money to yourself.", "error");
+          return;
+        }
+        if (!amount || amount < 1) {
+          showToast("Enter a valid amount.", "error");
+          return;
+        }
+        if (amount > getBalance()) {
+          showToast("Insufficient balance.", "error");
+          return;
+        }
+        if (!validatePin(pin)) {
+          showToast("Incorrect PIN. Please try again.", "error");
+          return;
+        }
+
+        const recipientName = USERS[recipient]
+          ? USERS[recipient].name
+          : recipient;
+
+        // Debit sender
+        setBalance(getBalance() - amount);
+        addTransaction(
+          "debit",
+          `Sent to ${recipientName}`,
+          amount,
+          ref || "Transfer",
+        );
+
+        // Credit recipient if in system
+        if (USERS[recipient]) {
+          const rBalance = parseFloat(
+            localStorage.getItem(`payoo_balance_${recipient}`) || 0,
+          );
+          localStorage.setItem(
+            `payoo_balance_${recipient}`,
+            (rBalance + amount).toFixed(2),
+          );
+          const rTxns = JSON.parse(
+            localStorage.getItem(`payoo_transactions_${recipient}`) || "[]",
+          );
+          rTxns.unshift({
+            id: Date.now(),
+            type: "credit",
+            label: `Received from ${USERS[currentUser].name}`,
+            amount,
+            note: ref || "Transfer",
+            time: new Date().toLocaleString("en-BD", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            balance: rBalance + amount,
+          });
+          localStorage.setItem(
+            `payoo_transactions_${recipient}`,
+            JSON.stringify(rTxns.slice(0, 100)),
+          );
+        }
+
+        showToast(
+          `৳${formatAmount(amount)} sent to ${recipientName}!`,
+          "success",
+        );
+        clearForm(["tf-recipient", "tf-amount", "tf-ref", "tf-pin"]);
+        document.getElementById("tf-recipient-name").classList.add("hidden");
+      }
+
+      // ─── BONUS ────────────────────────────────────────
+      function handleClaimBonus() {
+        const today = new Date().toDateString();
+        const lastClaim = localStorage.getItem(`payoo_bonus_${currentUser}`);
+        const statusEl = document.getElementById("bonus-status");
+
+        if (lastClaim === today) {
+          statusEl.className = "p-3 rounded-xl mb-4 text-sm font-medium";
+          statusEl.style.background = "#fef3c7";
+          statusEl.style.color = "#92400e";
+          statusEl.style.border = "1px solid #fde68a";
+          statusEl.textContent =
+            "⏰ You already claimed your bonus today. Come back tomorrow!";
+          statusEl.classList.remove("hidden");
+          return;
+        }
+
+        const bonus = Math.floor(Math.random() * 46) + 5; // ৳5 – ৳50
+        setBalance(getBalance() + bonus);
+        addTransaction(
+          "credit",
+          "Daily Bonus Claimed 🎁",
+          bonus,
+          "Daily reward",
+        );
+        localStorage.setItem(`payoo_bonus_${currentUser}`, today);
+
+        statusEl.className = "p-3 rounded-xl mb-4 text-sm font-medium";
+        statusEl.style.background = "#f0fdf4";
+        statusEl.style.color = "#166534";
+        statusEl.style.border = "1px solid #bbf7d0";
+        statusEl.textContent = `🎉 Congratulations! You received ৳${bonus} bonus!`;
+        statusEl.classList.remove("hidden");
+        showToast(`Bonus of ৳${bonus} added!`, "success");
+      }
+
+      // ─── PAY BILL ─────────────────────────────────────
+      function updateBillTypes() {
+        const cat = document.getElementById("pb-category").value;
+        const providerGroup = document.getElementById("pb-provider-group");
+        const providerSelect = document.getElementById("pb-provider");
+        if (cat && BILL_PROVIDERS[cat]) {
+          providerSelect.innerHTML = BILL_PROVIDERS[cat]
+            .map((p) => `<option value="${p}">${p}</option>`)
+            .join("");
+          providerGroup.style.display = "block";
+          document.getElementById("pb-bill-label").textContent =
+            cat === "mobile" ? "Mobile Number" : "Bill Account Number";
+        } else {
+          providerGroup.style.display = "none";
+        }
+      }
+
+      function handlePayBill() {
+        const cat = document.getElementById("pb-category").value;
+        const provider = document.getElementById("pb-provider").value;
+        const billnum = document.getElementById("pb-billnum").value.trim();
+        const amount = parseFloat(document.getElementById("pb-amount").value);
+        const pin = document.getElementById("pb-pin").value;
+
+        if (!cat) {
+          showToast("Please select a bill category.", "error");
+          return;
+        }
+        if (!billnum) {
+          showToast("Please enter bill account number.", "error");
+          return;
+        }
+        if (!amount || amount < 10) {
+          showToast("Minimum bill amount is ৳10.", "error");
+          return;
+        }
+        if (amount > getBalance()) {
+          showToast("Insufficient balance.", "error");
+          return;
+        }
+        if (!validatePin(pin)) {
+          showToast("Incorrect PIN. Please try again.", "error");
+          return;
+        }
+
+        setBalance(getBalance() - amount);
+        addTransaction(
+          "debit",
+          `${provider || cat} Bill Payment`,
+          amount,
+          `Bill No: ${billnum}`,
+        );
+        showToast(
+          `Bill of ৳${formatAmount(amount)} paid to ${provider || cat}!`,
+          "success",
+        );
+        clearForm(["pb-category", "pb-billnum", "pb-amount", "pb-pin"]);
+        document.getElementById("pb-provider-group").style.display = "none";
+      }
+
+      // ─── TRANSACTION HISTORY ──────────────────────────
+      function renderHistory() {
+        const txns = getTransactions();
+        const list = document.getElementById("txn-list");
+        if (!txns.length) {
+          list.innerHTML = `<div class="text-center py-8 text-slate-400">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;opacity:0.4"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <p class="text-sm">No transactions yet</p></div>`;
+          return;
+        }
+        list.innerHTML = txns
+          .map(
+            (t) => `
+          <div class="txn-item">
+            <div class="txn-icon ${t.type === "credit" ? "txn-credit" : "txn-debit"}">
+              ${
+                t.type === "credit"
+                  ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>'
+                  : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>'
+              }
             </div>
-          </div>
-        </section>
-      </main>
-    </section>
-    <script src="./main.js"></script>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-slate-800 truncate">${t.label}</p>
+              <p class="text-xs text-slate-400 truncate">${t.note || ""} · ${t.time}</p>
+            </div>
+            <div class="text-right ml-3 flex-shrink-0">
+              <p class="text-sm font-bold ${t.type === "credit" ? "text-emerald-600" : "text-red-500"}">
+                ${t.type === "credit" ? "+" : "-"}৳${formatAmount(t.amount)}
+              </p>
+              <p class="text-xs text-slate-400">Bal: ৳${formatAmount(t.balance)}</p>
+            </div>
+          </div>`,
+          )
+          .join("");
+      }
+
+      // ─── HELPERS ──────────────────────────────────────
+      function clearForm(ids) {
+        ids.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+      }
+
+      function toggleLogout() {
+        const menu = document.getElementById("logoutMenu");
+        menu.classList.toggle("hidden");
+      }
+
+      function logout() {
+        sessionStorage.removeItem("payoo_user");
+        window.location.href = "./index.html";
+      }
+
+      // Close logout menu on outside click
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("logoutMenu");
+        const avatar = document.getElementById("userAvatar");
+        if (!menu.contains(e.target) && e.target !== avatar) {
+          menu.classList.add("hidden");
+        }
+      });
+
+      init();
+    </script>
   </body>
 </html>
